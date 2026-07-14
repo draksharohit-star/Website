@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rohit Draksha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #F7F3EE;
+      --text: #2C2016;
+      --muted: #7A6558;
+      --rule: #C9B09A;
+      --accent: #A8876E;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.25;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse 70% 70% at 50% 50%, #F0E8DC 0%, transparent 70%);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 2rem 4rem;
+    }
+
+    .stage {
+      display: flex;
+      align-items: center;
+      gap: clamp(3rem, 8vw, 7rem);
+    }
+
+    .text-side {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+      text-align: left;
+      opacity: 0;
+      animation: rise 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+    }
+
+    .name {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 300;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .rule {
+      width: 100%;
+      height: 1px;
+      background: var(--rule);
+      opacity: 0.7;
+    }
+
+    .tagline {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.8;
+      letter-spacing: 0.01em;
+      max-width: 280px;
+    }
+
+    .photo-side {
+      flex-shrink: 0;
+      opacity: 0;
+      animation: rise 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
+    }
+
+    .photo-side img {
+      display: block;
+      width: clamp(180px, 22vw, 280px);
+      height: clamp(220px, 28vw, 340px);
+      object-fit: cover;
+      object-position: center top;
+      border-radius: 4px;
+    }
+
+    /* ── Section toggles ── */
+    .section-row {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0 2rem;
+      max-width: 760px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .section-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      color: var(--text);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.6rem;
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .section-toggle:hover {
+      color: var(--accent);
+    }
+
+    .section-label {
+      border-bottom: 1.5px solid var(--rule);
+      padding-bottom: 3px;
+      transition: border-color 0.2s;
+    }
+
+    .section-toggle:hover .section-label {
+      border-color: var(--accent);
+    }
+
+    .expand-icon {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      line-height: 1;
+      font-style: normal;
+    }
+
+    .icon-minus {
+      display: none;
+    }
+
+    .section-toggle.active .icon-plus {
+      display: none;
+    }
+
+    .section-toggle.active .icon-minus {
+      display: inline;
+    }
+
+    /* ── Collapsible panels ── */
+    .expand-panel {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .expand-panel.open {
+      max-height: 4000px;
+    }
+
+    /* ── About Me ── */
+    .about-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 3rem 2rem 4rem;
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.85;
+      letter-spacing: 0.01em;
+    }
+
+    .about-inner p + p {
+      margin-top: 1.6rem;
+    }
+
+    /* ── Projects ── */
+    .projects-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .project-card {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .project-card:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+
+    .project-name {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.4rem;
+    }
+
+    .project-desc {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 1.05rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 520px;
+    }
+
+    .project-link {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-shrink: 0;
+      color: var(--muted);
+      text-decoration: none;
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.88rem;
+      font-style: italic;
+      letter-spacing: 0.02em;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 1px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .project-link:hover {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .project-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .stack-tag {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 0.2rem 0.6rem;
+    }
+
+    /* ── Resume content ── */
+    .resume-inner {
+      padding: 3rem 2rem 6rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .resume {
+      width: 100%;
+      max-width: 760px;
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .resume-top-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 2.5rem;
+    }
+
+    .download-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.45rem 0.9rem;
+      border: 1px solid var(--rule);
+      border-radius: 3px;
+      background: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.88rem;
+      font-style: italic;
+      letter-spacing: 0.03em;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .download-btn:hover {
+      background: #EDE4DA;
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .resume-name {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 2rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-align: center;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+    }
+
+    .resume-contact {
+      text-align: center;
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.9;
+      letter-spacing: 0.01em;
+    }
+
+    .resume-contact a {
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--rule);
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .resume-contact a:hover {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .resume-note {
+      text-align: center;
+      font-size: 0.82rem;
+      font-style: italic;
+      color: var(--muted);
+      margin-top: 0.3rem;
+      opacity: 0.8;
+    }
+
+    .resume-section {
+      margin-top: 2.2rem;
+    }
+
+    .resume-section-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.7rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .skills-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      font-size: 0.93rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .skills-grid strong {
+      color: var(--text);
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    .exp-entry {
+      margin-bottom: 1.8rem;
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .exp-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .exp-date {
+      font-size: 0.82rem;
+      color: var(--muted);
+      white-space: nowrap;
+      font-style: italic;
+      flex-shrink: 0;
+    }
+
+    .exp-sub {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.6rem;
+    }
+
+    .exp-company {
+      font-size: 0.88rem;
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    .exp-location {
+      font-size: 0.82rem;
+      color: var(--muted);
+      opacity: 0.75;
+    }
+
+    .exp-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .exp-bullets li {
+      font-size: 0.93rem;
+      line-height: 1.65;
+      color: var(--muted);
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .exp-bullets li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--rule);
+      font-weight: 300;
+    }
+
+    .exp-bullets li strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .edu-entry {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+    }
+
+    .edu-left .edu-degree {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .edu-left .edu-honors {
+      font-size: 0.88rem;
+      font-style: italic;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .edu-date {
+      font-size: 0.82rem;
+      font-style: italic;
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* ── Download modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(44, 32, 22, 0.35);
+      backdrop-filter: blur(2px);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.visible {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--bg);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 2.2rem 2.4rem;
+      max-width: 380px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(44, 32, 22, 0.12);
+    }
+
+    .modal-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    .modal-filename {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.88rem;
+      font-style: italic;
+      color: var(--muted);
+      margin-bottom: 1.6rem;
+    }
+
+    .modal-question {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 1.8rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.8rem;
+      justify-content: center;
+    }
+
+    .modal-btn {
+      padding: 0.5rem 1.4rem;
+      border-radius: 3px;
+      border: 1px solid var(--rule);
+      background: none;
+      cursor: pointer;
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 0.9rem;
+      font-style: italic;
+      letter-spacing: 0.03em;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .modal-btn.cancel {
+      color: var(--muted);
+    }
+
+    .modal-btn.cancel:hover {
+      background: #EDE4DA;
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .modal-btn.confirm {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+
+    .modal-btn.confirm:hover {
+      background: #8E6E55;
+      border-color: #8E6E55;
+    }
+
+    /* spacer between sections */
+    .section-gap {
+      height: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      position: relative;
+      z-index: 1;
+      padding: 3rem 2rem 3rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .footer-icons {
+      display: flex;
+      gap: 1.8rem;
+      align-items: center;
+    }
+
+    .footer-icon {
+      color: var(--rule);
+      transition: color 0.2s, transform 0.2s;
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .footer-icon:hover {
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 680px) {
+
+      .hero {
+        padding: 3.5rem 1.5rem 3rem;
+      }
+
+      .stage {
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+      }
+
+      /* photo above name on mobile */
+      .photo-side {
+        order: -1;
+      }
+
+      .photo-side img {
+        width: 160px;
+        height: 200px;
+      }
+
+      .text-side {
+        align-items: center;
+        text-align: center;
+        width: 100%;
+      }
+
+      .tagline {
+        max-width: 100%;
+      }
+
+      .section-row {
+        padding: 0 1.5rem;
+      }
+
+      .about-inner {
+        padding: 2rem 1.5rem 3rem;
+        font-size: 1.1rem;
+      }
+
+      .resume-inner {
+        padding: 2rem 1.5rem 4rem;
+      }
+
+      /* stack job title + date vertically */
+      .exp-header {
+        flex-direction: column;
+        gap: 0.15rem;
+      }
+
+      .exp-sub {
+        flex-direction: column;
+        gap: 0.1rem;
+      }
+
+      /* stack degree + date vertically */
+      .edu-entry {
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+
+      .resume-contact {
+        font-size: 0.8rem;
+      }
+
+      .resume-name {
+        font-size: 1.5rem;
+      }
+
+      .modal-box {
+        padding: 1.6rem 1.4rem;
+      }
+    }
+
+    /* ── Animations ── */
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Hero ── -->
+  <div class="hero">
+    <div class="stage">
+      <div class="text-side">
+        <h1 class="name">Rohit<br>Draksha</h1>
+        <div class="rule"></div>
+        <p class="tagline">Hey! I'm Rohit Draksha. I like to build stuff and learn new things.</p>
+      </div>
+      <div class="photo-side">
+        <img src="RohitDraksha.png" alt="Rohit Draksha">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── About Me ── -->
+  <div class="section-row">
+    <button class="section-toggle" id="aboutBtn" onclick="toggleAbout()">
+      <span class="section-label">About Me</span>
+      <span class="expand-icon">
+        <span class="icon-plus">+</span>
+        <span class="icon-minus">−</span>
+      </span>
+    </button>
+  </div>
+
+  <div class="expand-panel" id="aboutPanel">
+    <div class="about-inner">
+      <p>
+        I'm a software engineer based in Dallas, Texas, with five years of experience building products at the
+        intersection of technology and customer needs. Since graduating from the University of Massachusetts Amherst in
+        2021 with a bachelor's degree in Computer Engineering, I've built my career around a customer-centric approach
+        to solving problems.
+        My professional journey began at AWS as a Cloud Support Associate, where I worked directly with customers to
+        resolve bottlenecks, troubleshoot and configure cloud systems, and improve team efficiency.
+      </p>
+      <p>
+        From there, I joined Paycom as a Software Engineer, building durable, highly available software that ensured
+        accurate and reliable payments for customers, a role that deepened my appreciation for the engineering rigor
+        behind products people depend on.
+        Today, I'm a Software Developer at an early-stage startup building a trading platform for Indian stock market
+        traders. I work directly with traders to ship features, automate trading workflows, and provide backtesting
+        tools that measurably improve their productivity, shaping both what we build and how we build it.
+
+      </p>
+      <p>
+
+        Outside of work, you'll find me hosting game nights, playing trivia, or on the pickleball court.
+        Want the full details? Check out my resume - and if you'd like to connect, reach out at draksha.rohit@gmail.com.
+      </p>
+    </div>
+  </div>
+
+  <div class="section-gap"></div>
+
+  <!-- ── Projects ── -->
+  <div class="section-row">
+    <button class="section-toggle" id="projectsBtn" onclick="toggleProjects()">
+      <span class="section-label">Projects</span>
+      <span class="expand-icon">
+        <span class="icon-plus">+</span>
+        <span class="icon-minus">−</span>
+      </span>
+    </button>
+  </div>
+
+  <div class="expand-panel" id="projectsPanel">
+    <div class="projects-inner">
+
+      <div class="project-card">
+        <div class="project-header">
+          <div>
+            <h3 class="project-name">World Cup Predictor</h3>
+            <p class="project-desc">Gamified world cup brackets and rankings — pick your teams, predict the winner, and compete with friends.</p>
+          </div>
+          <a class="project-link" href="https://github.com/draksharohit-star/World-cup-predictor" target="_blank" rel="noopener" aria-label="View on GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            View on GitHub
+          </a>
+        </div>
+        <div class="project-stack">
+          <span class="stack-tag">JavaScript</span>
+          <span class="stack-tag">Python</span>
+          <span class="stack-tag">CSS</span>
+          <span class="stack-tag">HTML</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section-gap"></div>
+
+  <!-- ── Resume ── -->
+  <div class="section-row">
+    <button class="section-toggle" id="resumeBtn" onclick="toggleResume()">
+      <span class="section-label">Resume</span>
+      <span class="expand-icon">
+        <span class="icon-plus">+</span>
+        <span class="icon-minus">−</span>
+      </span>
+    </button>
+  </div>
+
+  <div class="expand-panel" id="resumePanel">
+    <div class="resume-inner">
+      <div class="resume">
+
+        <div class="resume-top-bar">
+          <button class="download-btn" onclick="openModal()">
+            <svg width="13" height="14" viewBox="0 0 13 14" fill="none">
+              <path d="M6.5 1v8M3.5 6.5l3 3 3-3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path d="M1 11.5h11" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" />
+            </svg>
+            Download PDF
+          </button>
+        </div>
+
+        <h2 class="resume-name">Rohit Draksha</h2>
+        <div class="resume-contact">
+          Dallas, TX &nbsp;|&nbsp; +1 (630) 670-1928 &nbsp;|&nbsp;
+          <a href="mailto:draksha.rohit@gmail.com">draksha.rohit@gmail.com</a> &nbsp;|&nbsp;
+          <a href="https://linkedin.com/in/rohitdraksha" target="_blank">linkedin.com/in/rohitdraksha</a>
+        </div>
+        <p class="resume-note">U.S. Citizen — no visa sponsorship or relocation assistance required</p>
+
+        <div class="resume-section">
+          <div class="resume-section-title">Technical Skills</div>
+          <div class="skills-grid">
+            <div><strong>Languages:</strong> Python, C#, Java, TypeScript, C++, SQL, CSS</div>
+            <div><strong>Backend &amp; APIs:</strong> FastAPI, REST APIs, OAuth 2.0, service-oriented architecture, unit
+              testing, React, Angular</div>
+            <div><strong>AI Development Tools:</strong> Claude Code, Cursor — unit test generation, performance
+              bottleneck analysis, and debugging</div>
+            <div><strong>Cloud (AWS):</strong> Lambda, Step Functions, API Gateway, S3, EC2, CloudWatch</div>
+            <div><strong>Databases:</strong> PostgreSQL, SQL</div>
+          </div>
+        </div>
+
+        <div class="resume-section">
+          <div class="resume-section-title">Professional Experience</div>
+
+          <div class="exp-entry">
+            <div class="exp-header">
+              <span class="exp-title">Software Engineer</span>
+              <span class="exp-date">Jul 2025 – Present</span>
+            </div>
+            <div class="exp-sub">
+              <span class="exp-company">Yohum — fintech startup, F&amp;O derivatives trading platform</span>
+            </div>
+            <ul class="exp-bullets">
+              <li>Software engineer on a real-time futures &amp; options trading platform with 24/7 reliability
+                requirements; designed and shipped its core live price monitoring and strategy backtesting services on a
+                <strong>Python (FastAPI)</strong> backend with a React frontend.</li>
+              <li>Design and operate <strong>REST APIs</strong> for live market data, account data, and order workflows;
+                built an <strong>OAuth 2.0</strong> integration with Zerodha to securely authenticate users and stream
+                live market and account data.</li>
+              <li>Leverage <strong>Claude Code</strong> and Cursor in day-to-day development — generating unit test
+                suites, surfacing potential performance bottlenecks, and debugging backend code — to ship faster as a
+                small team.</li>
+              <li>Own cloud infrastructure and deployments end-to-end: run the production stack on <strong>AWS EC2 and
+                  S3</strong> and manage the <strong>PostgreSQL</strong> store for historical market data, tuning
+                queries for backtesting workloads.</li>
+              <li>Work directly with traders to evaluate platform strengths and gaps, shipping rapid, real-time
+                improvements to production.</li>
+            </ul>
+          </div>
+
+          <div class="exp-entry">
+            <div class="exp-header">
+              <span class="exp-title">Software Developer IV — Team Captain</span>
+              <span class="exp-date">Jun 2024 – Jul 2025</span>
+            </div>
+            <div class="exp-sub">
+              <span class="exp-company">Paycom — Back Office Software Solutions (BOSS) team</span>
+              <span class="exp-location">Dallas, TX</span>
+            </div>
+            <ul class="exp-bullets">
+              <li>Led the ground-up redesign of the bank account management system serving all <strong>30,000 of
+                  Paycom's clients globally</strong>; rearchitected the database for one-to-many account-purpose
+                mapping, eliminating a legacy workaround that required spinning up sub-clients.</li>
+              <li>Drove the migration of core payroll services out of a <strong>legacy PHP monolith</strong> into modern
+                C# backend services with a React frontend, improving performance, reliability, and maintainability.</li>
+              <li>Coordinated delivery across <strong>3 teams</strong> (Payroll, Tax, BOSS; 6 engineers), running
+                product–dev meetings, resolving PRD discrepancies, and driving the project to a successful production
+                deployment.</li>
+              <li>As team captain, reviewed ~40 pull requests, led clean-code sessions, and mentored a junior engineer
+                through onboarding.</li>
+            </ul>
+          </div>
+
+          <div class="exp-entry">
+            <div class="exp-header">
+              <span class="exp-title">Software Developer III</span>
+              <span class="exp-date">May 2023 – Jun 2024</span>
+            </div>
+            <div class="exp-sub">
+              <span class="exp-company">Paycom — Back Office Software Solutions (BOSS) team</span>
+              <span class="exp-location">Dallas, TX</span>
+            </div>
+            <ul class="exp-bullets">
+              <li>Took ownership of Client Settings, a legacy, defect-prone domain governing direct deposit, wire, and
+                bank account configuration that drives payroll, <strong>ACH, and NACHA file generation</strong> —
+                correctness-critical money-movement infrastructure.</li>
+              <li>Independently redesigned and rebuilt the Client Settings page, migrating it from legacy PHP to C# and
+                React.</li>
+              <li>Built client configuration pages for international expansion into Mexico, Ireland, and the UK,
+                implementing CLABE number and SWIFT code validations.</li>
+              <li>Promoted to Software Developer IV within <strong>13 months</strong> in recognition of ownership and
+                delivery.</li>
+            </ul>
+          </div>
+
+          <div class="exp-entry">
+            <div class="exp-header">
+              <span class="exp-title">Cloud Support Associate</span>
+              <span class="exp-date">Jul 2021 – May 2023</span>
+            </div>
+            <div class="exp-sub">
+              <span class="exp-company">Amazon Web Services (AWS)</span>
+            </div>
+            <ul class="exp-bullets">
+              <li>Helped thousands of AWS customers troubleshoot cloud configurations, analyze logs, and resolve
+                critical performance and <strong>scalability bottlenecks</strong> in production systems, with occasional
+                hands-on code support.</li>
+              <li>Earned multiple team accolades for rapid customer resolution and consistently well-documented support.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="resume-section">
+          <div class="resume-section-title">Education</div>
+          <div class="edu-entry">
+            <div class="edu-left">
+              <div class="edu-degree">B.S. in Computer Engineering — University of Massachusetts Amherst</div>
+              <div class="edu-honors">Chancellor's Award recipient &nbsp;·&nbsp; Dean's List Honor Roll</div>
+            </div>
+            <span class="edu-date">May 2021</span>
+          </div>
+        </div>
+
+        <div class="resume-section">
+          <div class="resume-section-title">Certifications</div>
+          <div class="edu-entry">
+            <div class="edu-left">
+              <div class="edu-degree">AWS Certified Cloud Practitioner</div>
+            </div>
+            <span class="edu-date">Feb 2023</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="section-gap"></div>
+
+  <!-- ── Download modal ── -->
+  <div class="modal-overlay" id="downloadModal" onclick="handleOverlayClick(event)">
+    <div class="modal-box">
+      <div class="modal-title">Downloading file</div>
+      <div class="modal-filename">Rohit_Draksha_Resume.pdf</div>
+      <div class="modal-question">Do you wish to continue?</div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+        <button class="modal-btn confirm" onclick="doDownload()">Yes, download</button>
+      </div>
+    </div>
+  </div>
+  <!-- ── Footer links ── -->
+  <footer class="site-footer">
+    <div class="footer-icons">
+
+      <a class="footer-icon" href="https://www.linkedin.com/in/rohitdraksha/" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="20" height="20" rx="3" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M7 10v7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M11 17v-3.5a2.5 2.5 0 0 1 5 0V17" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M11 10v7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="7" cy="7.5" r="0.8" fill="currentColor"/>
+        </svg>
+      </a>
+
+      <a class="footer-icon" href="mailto:draksha.rohit@gmail.com" aria-label="Email">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M2 7l10 7 10-7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+      <a class="footer-icon" href="https://github.com/draksharohit-star" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+      <a class="footer-icon" href="tel:+16306701928" aria-label="Phone">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6.5 2h3l1.5 4-2 1.5a11 11 0 0 0 7.5 7.5L18 13l4 1.5v3A2 2 0 0 1 20 19.5C10.5 19.5 4.5 13.5 4.5 4A2 2 0 0 1 6.5 2z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+    </div>
+  </footer>
+
+  <a id="downloadLink" href="Rohit_Draksha_Resume%20%281%29.pdf" download="Rohit_Draksha_Resume.pdf"
+    style="display:none"></a>
+
+  <script>
+    function toggleAbout() {
+      const panel = document.getElementById('aboutPanel');
+      const btn = document.getElementById('aboutBtn');
+      const open = panel.classList.toggle('open');
+      btn.classList.toggle('active', open);
+      if (open) setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+      else window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleProjects() {
+      const panel = document.getElementById('projectsPanel');
+      const btn   = document.getElementById('projectsBtn');
+      const open  = panel.classList.toggle('open');
+      btn.classList.toggle('active', open);
+      if (open) setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+      else document.getElementById('projectsBtn').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function toggleResume() {
+      const panel = document.getElementById('resumePanel');
+      const btn = document.getElementById('resumeBtn');
+      const open = panel.classList.toggle('open');
+      btn.classList.toggle('active', open);
+      if (open) setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+      else document.getElementById('resumeBtn').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function openModal() { document.getElementById('downloadModal').classList.add('visible'); }
+    function closeModal() { document.getElementById('downloadModal').classList.remove('visible'); }
+
+    function doDownload() {
+      document.getElementById('downloadLink').click();
+      closeModal();
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('downloadModal')) closeModal();
+    }
+  </script>
+
+</body>
+
+</html>
